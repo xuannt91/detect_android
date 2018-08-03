@@ -52,7 +52,7 @@ public class DetectUtils extends Observable {
         ServiceClient apiService = ServiceGenerator.createService(ServiceClient.class);
         Disposable disposable = apiService.clientApp(Constanst.KEY_UTM_MEDIUM, Constanst.KEY_UTM_SOURCE,
                 StringUtils.md5(Constanst.KEY_UTM_SOURCE + Constanst.KEY_SECRET + Constanst.KEY_UTM_MEDIUM),
-                mContext.getPackageName(), DeviceUtils.getPlatform(), "ANDROID", DeviceUtils.getVerisonCode())
+                mContext.getPackageName(), DeviceUtils.getVerisonCode(), "ANDROID", DeviceUtils.getPlatform())
                 .subscribeOn(scheduler)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<MobileResponse>() {
@@ -145,7 +145,7 @@ public class DetectUtils extends Observable {
     private void receiveClientDetect(CookieResult result) {
         ServiceClient apiService = ServiceGenerator.createService(ServiceClient.class);
         Disposable disposable = apiService.receiveClientDetect(Constanst.KEY_UTM_MEDIUM, Constanst.KEY_UTM_SOURCE, result.getMobile(), result.getCookie().toString(),
-                StringUtils.md5(Constanst.KEY_UTM_SOURCE + Constanst.KEY_SECRET + Constanst.KEY_UTM_MEDIUM), mContext.getPackageName(), DeviceUtils.getPlatform(), "ANDROID", DeviceUtils.getVerisonCode())
+                StringUtils.md5(Constanst.KEY_UTM_SOURCE + Constanst.KEY_SECRET + Constanst.KEY_UTM_MEDIUM), mContext.getPackageName(), DeviceUtils.getVerisonCode(), "ANDROID", DeviceUtils.getPlatform())
                 .subscribeOn(scheduler)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<MobileResponse>() {
