@@ -35,14 +35,14 @@ import namviet.ultils.detect.listener.DetectListener;
 import namviet.ultils.detect.model.CookieResult;
 import namviet.ultils.detect.model.MobileResponse;
 
-public class MobileUtils extends Observable {
+public class DetectUtils extends Observable {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private Scheduler scheduler;
     private DetectListener detectListener;
     private Context mContext;
     private String mobile = "";
 
-    public MobileUtils(Context context, DetectListener detectListener) {
+    public DetectUtils(Context context, DetectListener detectListener) {
         this.mContext = context;
         this.detectListener = detectListener;
         this.scheduler = Schedulers.io();
@@ -50,7 +50,9 @@ public class MobileUtils extends Observable {
 
     public void detectMobile() {
         ServiceClient apiService = ServiceGenerator.createService(ServiceClient.class);
-        Disposable disposable = apiService.clientApp(Parameter.clientApp())
+        Disposable disposable = apiService.clientApp(Constanst.KEY_UTM_MEDIUM, Constanst.KEY_UTM_SOURCE,
+                StringUtils.md5(Constanst.KEY_UTM_SOURCE + Constanst.KEY_SECRET + Constanst.KEY_UTM_MEDIUM),
+                mContext.getPackageName(), DeviceUtils.getPlatform(), "ANDROID", DeviceUtils.getVerisonCode())
                 .subscribeOn(scheduler)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<MobileResponse>() {
