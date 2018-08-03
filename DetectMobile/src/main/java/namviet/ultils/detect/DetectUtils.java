@@ -2,9 +2,6 @@ package namviet.ultils.detect;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
-
-import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -28,23 +25,19 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import namviet.ultils.detect.config.Constanst;
 import namviet.ultils.detect.data.DeviceUtils;
-import namviet.ultils.detect.data.Parameter;
 import namviet.ultils.detect.data.ServiceClient;
 import namviet.ultils.detect.data.ServiceGenerator;
-import namviet.ultils.detect.listener.DetectListener;
 import namviet.ultils.detect.model.CookieResult;
 import namviet.ultils.detect.model.MobileResponse;
 
 public class DetectUtils extends Observable {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private Scheduler scheduler;
-    private DetectListener detectListener;
     private Context mContext;
     private String mobile = "";
 
-    public DetectUtils(Context context, DetectListener detectListener) {
+    public DetectUtils(Context context) {
         this.mContext = context;
-        this.detectListener = detectListener;
         this.scheduler = Schedulers.io();
     }
 
@@ -114,7 +107,6 @@ public class DetectUtils extends Observable {
             super.onPostExecute(result);
             if (null != result) {
                 receiveClientDetect(result);
-                detectListener.onDetectSuccess(result.getMobile());
             }
 
         }

@@ -13,13 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DetectUtils detectUtils = new DetectUtils(this, new DetectListener() {
-            @Override
-            public void onDetectSuccess(String s) {
-                Toast.makeText(MainActivity.this, "" + s, Toast.LENGTH_LONG).show();
-            }
-        });
-        detectUtils.detectMobile();
+        new DetectUtils(this).detectMobile();
     }
 
 
