@@ -1,6 +1,5 @@
 package namviet.ultils.detect.data;
 
-import android.util.Base64;
 
 import java.io.IOException;
 

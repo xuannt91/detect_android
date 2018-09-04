@@ -2,6 +2,7 @@ package namviet.ultils.detect;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -27,8 +28,12 @@ import namviet.ultils.detect.config.Constanst;
 import namviet.ultils.detect.data.DeviceUtils;
 import namviet.ultils.detect.data.ServiceClient;
 import namviet.ultils.detect.data.ServiceGenerator;
+import namviet.ultils.detect.listener.DetectListener;
 import namviet.ultils.detect.model.CookieResult;
 import namviet.ultils.detect.model.MobileResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetectUtils extends Observable {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -53,6 +58,7 @@ public class DetectUtils extends Observable {
                     public void accept(MobileResponse mobileResponse) throws Exception {
                         if (null != mobileResponse && mobileResponse.getError().equals(Constanst.KEY_DETECT_URL)) {
                             getDetectUrl(mobileResponse.getData().getDetect_url());
+//                            getMobile(mobileResponse.getData().getDetect_url());
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -64,6 +70,25 @@ public class DetectUtils extends Observable {
         compositeDisposable.add(disposable);
     }
 
+
+    private void getMobile(String url) {
+        ServiceClient apiService = ServiceGenerator.createService(ServiceClient.class);
+        Call<MobileResponse> call = apiService.getMobile(url);
+        call.enqueue(new Callback<MobileResponse>() {
+            @Override
+            public void onResponse(Call<MobileResponse> call, Response<MobileResponse> response) {
+//                List<Header> headerList = response.getHeaders();
+//                for(Header header : headerList) {
+//                    Log.d("header", header.getName() + " " + header.getValue());
+//                }
+
+            }
+
+            @Override
+            public void onFailure(Call<MobileResponse> call, Throwable t) {
+            }
+        });
+    }
 
     private void getDetectUrl(String link) {
         new AsyncDetect(link).execute();
@@ -89,6 +114,7 @@ public class DetectUtils extends Observable {
                 List<org.apache.http.Header> httpHeaders = Arrays.asList(response.getAllHeaders());
 
                 for (org.apache.http.Header header : httpHeaders) {
+                    Log.e("header", "" + header.toString());
                     if (header.getName().equals("Set-Cookie")) {
                         JSONObject cookie = getKeyValue(header.getValue());
                         map.put(cookie);
@@ -117,15 +143,28 @@ public class DetectUtils extends Observable {
         String[] str2 = str1[0].split("=");
         String[] str3 = str1[1].split("=");
         if (null != str2 && str2.length > 0 && str2[0].equals("msisdn")) {
-            mobile = str2[1];
+            if (str2.length > 1) {
+                mobile = str2[1];
+            }
+
         }
         JSONObject jsonObject = new JSONObject();
         try {
             if (null != str2 && str2.length > 0) {
+                if (str2.length > 1) {
+                    jsonObject.put(str2[0], str2[1]);
+                } else {
+                    jsonObject.put(str2[0], "");
+                }
                 jsonObject.put(str2[0], str2[1]);
             }
             if (null != str3 && str3.length > 0) {
-                jsonObject.put(str3[0], str3[1]);
+                if (str3.length > 1) {
+                    jsonObject.put(str3[0], str3[1]);
+                } else {
+                    jsonObject.put(str3[0], "");
+                }
+
             }
 
         } catch (JSONException e) {
