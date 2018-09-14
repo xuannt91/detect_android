@@ -112,12 +112,12 @@ public class DetectUtils extends Observable {
                 request.addHeader("User-Agent", "Mozilla/5.0 (Linux; Android 7.1.1; ASUS_X00DD Build/NMF26F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36");
                 HttpResponse response = client.execute(request);
                 List<org.apache.http.Header> httpHeaders = Arrays.asList(response.getAllHeaders());
-
                 for (org.apache.http.Header header : httpHeaders) {
-                    Log.e("header", "" + header.toString());
                     if (header.getName().equals("Set-Cookie")) {
-                        JSONObject cookie = getKeyValue(header.getValue());
-                        map.put(cookie);
+                        if (null != header.getValue() && header.getValue().length() > 0) {
+                            JSONObject cookie = getKeyValue(header.getValue());
+                            map.put(cookie);
+                        }
                     }
                 }
                 cookieResult = new CookieResult(mobile, map);
@@ -143,9 +143,9 @@ public class DetectUtils extends Observable {
         JSONObject jsonObject = new JSONObject();
         if (null != str1 && str1.length > 0) {
             String[] str2 = str1[0].split("=");
-            String[] str3=null;
-            if(str1.length>1){
-                str3= str1[1].split("=");
+            String[] str3 = null;
+            if (str1.length > 1) {
+                str3 = str1[1].split("=");
             }
             if (null != str2 && str2.length > 0 && str2[0].equals("msisdn")) {
                 if (str2.length > 1) {
