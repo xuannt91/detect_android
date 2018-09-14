@@ -140,36 +140,40 @@ public class DetectUtils extends Observable {
 
     private JSONObject getKeyValue(String cookie) {
         String[] str1 = cookie.split(";");
-        String[] str2 = str1[0].split("=");
-        String[] str3 = str1[1].split("=");
-        if (null != str2 && str2.length > 0 && str2[0].equals("msisdn")) {
-            if (str2.length > 1) {
-                mobile = str2[1];
-            }
-
-        }
         JSONObject jsonObject = new JSONObject();
-        try {
-            if (null != str2 && str2.length > 0) {
+        if (null != str1 && str1.length > 0) {
+            String[] str2 = str1[0].split("=");
+            String[] str3=null;
+            if(str1.length>1){
+                str3= str1[1].split("=");
+            }
+            if (null != str2 && str2.length > 0 && str2[0].equals("msisdn")) {
                 if (str2.length > 1) {
-                    jsonObject.put(str2[0], str2[1]);
-                } else {
-                    jsonObject.put(str2[0], "");
+                    mobile = str2[1];
                 }
-                jsonObject.put(str2[0], str2[1]);
             }
-            if (null != str3 && str3.length > 0) {
-                if (str3.length > 1) {
-                    jsonObject.put(str3[0], str3[1]);
-                } else {
-                    jsonObject.put(str3[0], "");
+            try {
+                if (null != str2 && str2.length > 0) {
+                    if (str2.length > 1) {
+                        jsonObject.put(str2[0], str2[1]);
+                    } else {
+                        jsonObject.put(str2[0], "");
+                    }
+                }
+                if (null != str3 && str3.length > 0) {
+                    if (str3.length > 1) {
+                        jsonObject.put(str3[0], str3[1]);
+                    } else {
+                        jsonObject.put(str3[0], "");
+                    }
+
                 }
 
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
         return jsonObject;
     }
 
